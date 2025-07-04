@@ -1,32 +1,15 @@
-import React, { useRef } from "react";
+import { useTodoContext } from "../hooks/useTodoContext";
+import useTodos from "../hooks/useTodos";
 
-const TodoWriteForm = ({ todos, setTodos }) => {
-    const todoId = useRef(4); // 초기 ID 설정, useRef를 사용하여 상태 관리
+const TodoWriteForm = () => {
+    const { todos, setTodos } = useTodoContext();
+    const { addTodo } = useTodos({ todos, setTodos });
 
     const handleSubmit = (e) => {
         e.preventDefault();
         addTodo(e.target.elements.todo.value);
         e.target.elements.todo.value = ""; // 입력 필드 초기화
         e.target.elements.todo.focus(); // 입력 필드에 포커스 유지
-    };
-
-    const addTodo = (text) => {
-        setTodos([{ todo: text, completed: false, id: todoId.current }, ...todos]);
-        todoId.current++;
-        // fetch("https://dummyjson.com/todos/add", {
-        //     method: "POST",
-        //     headers: { "Content-Type": "application/json" },
-        //     body: JSON.stringify({
-        //         todo: text,
-        //         completed: false,
-        //         userId: todoId.current,
-        //     }),
-        // })
-        //     .then((res) => res.json())
-        //     .then((todo) => {
-        //         setTodos([todo, ...todos]);
-        //         todoId.current = todoId + 1;
-        //     });
     };
 
     return (
