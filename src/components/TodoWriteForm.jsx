@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useRef } from "react";
 
-const TodoWriteForm = () => {
+const TodoWriteForm = ({ todos, setTodos }) => {
+    const todoId = useRef(4); // 초기 ID 설정, useRef를 사용하여 상태 관리
+
     const handleSubmit = (e) => {
         e.preventDefault();
         addTodo(e.target.elements.todo.value);

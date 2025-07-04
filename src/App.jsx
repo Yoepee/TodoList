@@ -1,27 +1,7 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import "./App.css";
-
-const TodoItem = ({ todo, onDelete, onToggle }) => {
-    return (
-        <li className="text-2xl">
-            <input
-                type="checkbox"
-                className="mr-2"
-                checked={todo.completed}
-                onClick={() => {
-                    onToggle(todo.id, todo.completed);
-                }}
-                readOnly
-            />
-            <span onClick={() => onToggle(todo.id, todo.completed)} className="cursor-pointer">
-                {todo.id}.{todo.todo} / checked: {JSON.stringify(todo.completed)}
-            </span>
-            <button onClick={() => onDelete(todo.id)} className="ml-2 text-red-500">
-                X
-            </button>
-        </li>
-    );
-};
+import TodoWriteForm from "./components/TodoWriteForm";
+import TodoList from "./components/TodoList";
 
 // const getTodoList = async () => {
 //     try {
@@ -39,7 +19,6 @@ const TodoItem = ({ todo, onDelete, onToggle }) => {
 
 const App = () => {
     // const [todos, setTodos] = useState([]); // 초기 todos 배열 설정
-    const todoId = useRef(4); // 초기 ID 설정, useRef를 사용하여 상태 관리
     const [todos, setTodos] = useState([
         { id: 3, completed: false, todo: "공부하기" },
         { id: 2, completed: false, todo: "운동하기" },
@@ -57,72 +36,11 @@ const App = () => {
     //     fetchTodos();
     // }, []);
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        addTodo(e.target.elements.todo.value);
-        e.target.elements.todo.value = ""; // 입력 필드 초기화
-        e.target.elements.todo.focus(); // 입력 필드에 포커스 유지
-    };
-
-    const addTodo = (text) => {
-        setTodos([{ todo: text, completed: false, id: todoId.current }, ...todos]);
-        todoId.current++;
-        // fetch("https://dummyjson.com/todos/add", {
-        //     method: "POST",
-        //     headers: { "Content-Type": "application/json" },
-        //     body: JSON.stringify({
-        //         todo: text,
-        //         completed: false,
-        //         userId: todoId.current,
-        //     }),
-        // })
-        //     .then((res) => res.json())
-        //     .then((todo) => {
-        //         setTodos([todo, ...todos]);
-        //         todoId.current = todoId + 1;
-        //     });
-    };
-
-    const removeTodo = (id) => {
-        setTodos(todos.filter((todo) => todo.id !== id));
-        // fetch(`https://dummyjson.com/todos/${id}`, {
-        //     method: "DELETE",
-        // })
-        //     .then((res) => res.json())
-        //     .then((todo) => {
-        //         setTodos(todos.filter((item) => item.id !== todo.id));
-        //     });
-    };
-
-    const toggleTodo = (id, completed) => {
-        setTodos(todos.map((todo) => (todo.id === id ? { ...todo, completed: !completed } : todo)));
-        // fetch(`https://dummyjson.com/todos/${id}`, {
-        //     method: "PUT" /* or PATCH */,
-        //     headers: { "Content-Type": "application/json" },
-        //     body: JSON.stringify({
-        //         completed: !completed,
-        //     }),
-        // })
-        //     .then((res) => res.json())
-        //     .then((todo) => {
-        //         setTodos(todos.map((item) => (item.id === todo.id ? todo : item)));
-        //     });
-    };
-
     return (
         <>
             <h1 className="text-3xl font-bold">Todo List</h1>
-            <form onSubmit={handleSubmit}>
-                <input name="todo" className="border" />
-                <button type="submit" className="border">
-                    등록
-                </button>
-            </form>
-            <ul>
-                {todos.map((todo) => (
-                    <TodoItem key={todo.id} todo={todo} onDelete={removeTodo} onToggle={toggleTodo} />
-                ))}
-            </ul>
+            <TodoWriteForm todos={todos} setTodos={setTodos} />
+            <TodoList todos={todos} setTodos={setTodos} />
         </>
     );
 };
